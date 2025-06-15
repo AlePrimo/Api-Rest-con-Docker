@@ -16,7 +16,7 @@ COPY ./mvnw /root
 
 # DESCARGAR LAS DEPENDENCIAS
 
-RUN ./mnnw dependency:go-offline
+RUN ./mvnw dependency:go-offline
 
 # COPIAR EL CODIGO FUENTE DENTRO DEL CONTENEDOR
 
