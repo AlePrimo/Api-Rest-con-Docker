@@ -1,5 +1,3 @@
-
-
 services:
   mysql_docker_db:
     image: mysql:latest
