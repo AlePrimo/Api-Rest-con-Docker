@@ -1,0 +1,35 @@
+services:
+  mysql_docker_db:
+    image: mysql:latest
+    container_name: mysql_docker_db
+    environment:
+      MYSQL_DATABASE: dockerDB
+      MYSQL_ROOT_PASSWORD: ${PASSMYSQL}
+      MYSQL_USER: ${USERMYSQL}
+      MYSQL_PASSWORD: ${PASSMYSQL}
+    ports:
+      - "3306:3306"
+    networks:
+      - springnet
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  spring_app:
+    image: springdocker
+    container_name: spring_app
+    depends_on:
+      - mysql_docker_db
+    environment:
+      USERMYSQL: ${USERMYSQL}
+      PASSMYSQL: ${PASSMYSQL}
+    ports:
+      - "8080:8080"
+    networks:
+      - springnet
+
+networks:
+  springnet:
+    external: true
+
+volumes:
+  mysql_data:
