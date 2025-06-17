@@ -4,9 +4,9 @@ services:
     container_name: mysql_docker_db
     environment:
       MYSQL_DATABASE: dockerDB
-      MYSQL_ROOT_PASSWORD: ${PASSMYSQL}
-      MYSQL_USER: ${USERMYSQL}
-      MYSQL_PASSWORD: ${PASSMYSQL}
+      MYSQL_ROOT_PASSWORD: rootClave456
+      MYSQL_USER: usuarioinventado
+      MYSQL_PASSWORD: clavesegura1234
     ports:
       - "3306:3306"
     networks:
@@ -20,8 +20,8 @@ services:
     depends_on:
       - mysql_docker_db
     environment:
-      USERMYSQL: ${USERMYSQL}
-      PASSMYSQL: ${PASSMYSQL}
+      USERMYSQL: usuarioinventado
+      PASSMYSQL: clavesegura1234
     ports:
       - "8080:8080"
     networks:
