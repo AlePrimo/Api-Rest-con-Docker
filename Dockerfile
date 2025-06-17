@@ -2,30 +2,24 @@
 # IMAGEN MODELO
 FROM eclipse-temurin:21.0.7_6-jdk
 
-# INFORMAR EL PUERTO DONDE SE VA A EJECUTAR EL CONTENEDOR (SOLO POR INFORMAR)
 EXPOSE 8080
 
+WORKDIR /app
 
-# CREAMOS Y DEFINIMOS EL DIRECTORIO RAIZ DE NUESTRO CONTENEDOR
-WORKDIR /root
+# Copiar solo lo necesario para descargar dependencias
+COPY ./pom.xml ./mvnw ./.mvn/ ./
 
-# COPIAMOS Y PEGAMOS LA CONFIGURACION POM Y LOS ARCHIVOS MAVEN
-COPY ./pom.xml /root
-COPY ./.mvn /root/.mvn
-COPY ./mvnw /root
+# Dar permisos de ejecución
+RUN chmod +x mvnw
 
-# DESCARGAR LAS DEPENDENCIAS
-
+# Descargar dependencias
 RUN ./mvnw dependency:go-offline
 
-# COPIAR EL CODIGO FUENTE DENTRO DEL CONTENEDOR
+# Copiar el código fuente
+COPY ./src ./src
 
-COPY ./src /root/src
+# Compilar la app
+RUN ./mvnw clean package -DskipTests
 
-# CONSTRUIR NUESTRA APLICACION  -- saltando los tests(solo en este caso por cuestion de tiempo del video)
-
-RUN ./mvnw clean install -DskipTests
-
-# LEVANTAR LA APLICACION CUANDO INICIE EL CONTENEDOR
-
-ENTRYPOINT ["java","-jar","/root/target/SpringDocker-0.0.1-SNAPSHOT.jar"]
+# Ejecutar
+ENTRYPOINT ["java", "-jar", "target/SpringDocker-0.0.1-SNAPSHOT.jar"]
