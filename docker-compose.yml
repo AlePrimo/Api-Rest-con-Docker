@@ -15,7 +15,7 @@ services:
       - mysql_data:/var/lib/mysql
 
   spring_app:
-    image: springdocker
+    build: .
     container_name: spring_app
     depends_on:
       - mysql_docker_db
