@@ -1,15 +1,20 @@
+
 #!/bin/sh
 
-host=$(echo "$1" | cut -d: -f1)
-port=$(echo "$1" | cut -d: -f2)
 
-shift
+host="$1"
+port="$2"
+user="$3"
+password="$4"
+database="$5"
+shift 5
 
-echo "Esperando a $host:$port..."
+echo "Esperando a que MySQL esté listo en $host:$port con usuario $user..."
 
-while ! nc -z "$host" "$port"; do
+until mysql -h "$host" -P "$port" -u"$user" -p"$password" "$database" -e "SELECT 1" >/dev/null 2>&1; do
+  echo "Esperando..."
   sleep 2
 done
 
-echo "$host:$port disponible. Iniciando aplicación..."
+echo "MySQL está listo. Iniciando aplicación..."
 exec "$@"

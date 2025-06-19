@@ -12,12 +12,17 @@ RUN ./mvnw dependency:go-offline
 
 # Copiar código fuente y script de espera
 COPY ./src ./src
-COPY wait-for.sh /wait-for.sh
-RUN chmod +x /wait-for.sh
+COPY wait-for-mysql.sh /wait-for-mysql.sh
+RUN chmod +x /wait-for-mysql.sh
+
+# Instalar cliente de MySQL
+RUN apt-get update && apt-get install -y default-mysql-client
 
 # Compilar la app
 RUN ./mvnw clean package -DskipTests
 
 # Ejecutar esperando a que MySQL esté listo
-ENTRYPOINT ["/wait-for.sh", "mysql_docker_db:3306", "--", "java", "-jar", "target/SpringDocker-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["/wait-for-mysql.sh", "mysql_docker_db", "3306", "dbuser", "dbpass1234", "dockerDB", "java", "-jar", "target/SpringDocker-0.0.1-SNAPSHOT.jar"]
+
+
 
