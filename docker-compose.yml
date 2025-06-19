@@ -5,8 +5,8 @@ services:
     environment:
       MYSQL_DATABASE: dockerDB
       MYSQL_ROOT_PASSWORD: rootClave456
-      MYSQL_USER: usuarioinventado
-      MYSQL_PASSWORD: clavesegura1234
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: dbpass1234
     ports:
       - "3306:3306"
     networks:
@@ -14,7 +14,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootClave456"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-prootClave456"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -26,8 +26,8 @@ services:
       mysql_docker_db:
         condition: service_healthy
     environment:
-      USERMYSQL: usuarioinventado
-      PASSMYSQL: clavesegura1234
+      DB_USERNAME: dbuser
+      DB_PASSWORD: dbpass1234
     ports:
       - "8080:8080"
     networks:
@@ -38,3 +38,4 @@ volumes:
 
 networks:
   springnet:
+
