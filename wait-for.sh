@@ -1,6 +1,6 @@
 
-#!/bin/sh
 
+#!/bin/bash
 
 host="$1"
 port="$2"
@@ -9,12 +9,17 @@ password="$4"
 database="$5"
 shift 5
 
-echo "Esperando a que MySQL esté listo en $host:$port con usuario $user..."
+echo "Esperando a MySQL en $host:$port con usuario $user..."
 
-until mysql -h "$host" -P "$port" -u"$user" -p"$password" "$database" -e "SELECT 1" >/dev/null 2>&1; do
-  echo "Esperando..."
+for i in {1..20}; do
+  echo "Intento $i..."
+  if mysql -h "$host" -P "$port" -u"$user" -p"$password" -e "USE $database;" > /dev/null 2>&1; then
+    echo "✅ MySQL está listo."
+    exec "$@"
+    exit
+  fi
   sleep 2
 done
 
-echo "MySQL está listo. Iniciando aplicación..."
-exec "$@"
+echo "❌ Error: No se pudo conectar a MySQL después de múltiples intentos."
+exit 1
